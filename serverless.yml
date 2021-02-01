@@ -1,0 +1,70 @@
+
+service: njs_reto
+plugins: 
+  - serverless-offline  
+frameworkVersion: '2'
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: us-east-2
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+package:
+  include:
+    - features/**
+    - models/**
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+functions:
+  create:
+    handler: features/create.create
+    events:
+      - http:
+          path: sw
+          method: post
+          cors: true    
+  list:
+      handler: features/list.list
+      events:
+        - http:
+            path: sw
+            method: get
+            cors: true                 
+  getPersona:
+      handler: features/get.getPersona
+      events:
+        - http:
+            path: sw/getPersona/{id}
+            method: get
+            cors: true  
+  getFilm:
+      handler: features/get.getFilm
+      events:
+        - http:
+            path: sw/getFilm/{id}
+            method: get
+            cors: true              
